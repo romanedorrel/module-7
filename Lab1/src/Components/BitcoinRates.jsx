@@ -8,7 +8,7 @@ const [rate, setRate] = useState('');
 
 useEffect(()=> {
         
-        let ignore = false;
+        
         //fetch URL: https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currency}
         fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currency}`)
         .then(response => response.json())
