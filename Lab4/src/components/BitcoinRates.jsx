@@ -1,4 +1,5 @@
 import { useState} from "react";
+import { useUserContext } from "../context/EmojiContext";
 import { useData } from "../hooks/useData";
 
 const currencies = ['USD', 'AUD', 'NZD', 'GBP', 'EUR', 'SGD'];
@@ -6,6 +7,8 @@ const currencies = ['USD', 'AUD', 'NZD', 'GBP', 'EUR', 'SGD'];
 function BitcoinRates() {
         
 const [currency, setCurrency] = useState(currencies[0]);
+
+const {currentEmoji} = useUserContext();
 
 const data = useData(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currency}`);
 
@@ -23,7 +26,7 @@ return (
                         {options}
                 </select>
         </label>
-        <div><strong>Bitcoin Rates:</strong>{rate}</div>
+        <div><strong>Bitcoin Rates:</strong>{rate}{currentEmoji.emoji}</div>
 </div>
 )
 }
@@ -39,10 +42,10 @@ export default BitcoinRates;
 
 // const [currency, setCurrency] = useState(currencies[0]);
 
-// const info = useReducerData(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currency}`);
+// const data = useReducerData(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currency}`);
 
 
-// const rate = info.data ? info.data.bitcoin[currency.toLowerCase()] : 0;
+// const rate = data.bitcoin[currency.toLowerCase()]
 
 
 // const options = currencies.map(curr => <option value={curr} key={curr}>{curr}</option>);
@@ -56,7 +59,6 @@ export default BitcoinRates;
 //                 </select>
 //         </label>
 //         <div><strong>Bitcoin Rates:</strong>{rate}</div>
-//         <div>{info.error}</div>
 // </div>
 // )
 // }

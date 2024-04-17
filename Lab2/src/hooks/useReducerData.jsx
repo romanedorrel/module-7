@@ -2,26 +2,31 @@ import { useEffect, useReducer } from "react";
 
 export function useReducerData(url){
 
-    const [rates, dispatch] = useReducer(reducer,{
-        data: [],
+    const [rates, dispatch] = useReducer(reducer,{ loading: true,
+        data: {},
         error: ''
     });
 
     useEffect(()=> {
+        if(url){
+            let ignore = false;
+            
         fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            dispatch({ type: "success", payload: data });
+        .then(response => response.json())
+        .then(json => {
+            if(!ignore) {
+                 dispatch({ type: "success", payload: json });
+            } 
         })
         .catch(error => {
             dispatch({ type: "fail", payload: error.message });
         });
-    },[]);
+        return() => {
+            ignore = true;
+        }
+        }
+        
+    },[url]);
     return (
         <div className="rates">
             <div>{rates.data}</div>
@@ -32,8 +37,8 @@ export function useReducerData(url){
 
 function reducer(rates, action){
     switch(action.type){
-        case 'success': return  {data : action.payload, error: ''}
-        case 'fail': return {data: [], error: action.payload}
-        default: return {...rates}
+        case 'success': return  { loading: false, data : action.payload, error: ''}
+        case 'fail': return {loading: false, data: {}, error: action.payload}
+        default: return {...rates, loading: false}
     } 
 }
